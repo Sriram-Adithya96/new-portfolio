@@ -228,14 +228,14 @@ export function HeroSection() {
             </div>
 
             <div className="flex flex-wrap gap-4 pt-1">
-              <Link href="/projects" className="micro-lift group relative inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 px-7 py-3.5 font-semibold text-white shadow-lg shadow-purple-500/30 transition hover:shadow-lg hover:shadow-purple-500/50">
+              <a href="#projects" className="micro-lift group relative inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 px-7 py-3.5 font-semibold text-white shadow-lg shadow-purple-500/30 transition hover:shadow-lg hover:shadow-purple-500/50">
                 View Projects
-                <span className="absolute inset-0 rounded-xl bg-gradient-to-r from-white/0 via-white/10 to-white/0 opacity-0 transition group-hover:opacity-100" />
-              </Link>
-              <a href="/resume.pdf" download className="micro-lift group relative inline-flex items-center justify-center rounded-xl border border-purple-300 bg-white/70 px-7 py-3.5 font-semibold text-slate-800 transition backdrop-blur-sm hover:bg-white/85 hover:border-purple-400">
+              <span className="absolute inset-0 rounded-xl bg-gradient-to-r from-white/0 via-white/10 to-white/0 opacity-0 transition group-hover:opacity-100" />
+              </a>
+              {/* <a href="/resume.pdf" download className="micro-lift group relative inline-flex items-center justify-center rounded-xl border border-purple-300 bg-white/70 px-7 py-3.5 font-semibold text-slate-800 transition backdrop-blur-sm hover:bg-white/85 hover:border-purple-400">
                 Download Resume
                 <span className="absolute inset-0 rounded-xl bg-gradient-to-r from-white/0 via-white/10 to-white/0 opacity-0 transition group-hover:opacity-100" />
-              </a>
+              </a> */}
             </div>
 
             <div className="grid gap-3 pt-3 sm:grid-cols-3">

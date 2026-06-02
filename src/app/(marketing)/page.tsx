@@ -15,10 +15,10 @@ export default function HomePage() {
         <AnimatedBackground />
         <SiteHeader />
         <SectionReveal><HeroSection /></SectionReveal>
-        <SectionReveal><FeaturedProjectsSection /></SectionReveal>
-        <SectionReveal><SkillsTechnologiesSection /></SectionReveal>
-        <SectionReveal><EducationTimelineSection /></SectionReveal>
-        <SectionReveal><ContactSection /></SectionReveal>
+<div id="projects"><SectionReveal><FeaturedProjectsSection /></SectionReveal></div>
+<div id="skills"><SectionReveal><SkillsTechnologiesSection /></SectionReveal></div>
+<div id="education"><SectionReveal><EducationTimelineSection /></SectionReveal></div>
+<div id="contact"><SectionReveal><ContactSection /></SectionReveal></div>
       </main>
     </PageTransition>
   );
