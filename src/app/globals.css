@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: #101323;
+  background: #ffffff;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: rgba(147, 152, 255, 0.22);
+}
+
+.micro-lift {
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 260ms ease;
+}
+
+.micro-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 44px rgba(91, 94, 255, 0.16);
+}
+
+.shadow-glass {
+  box-shadow: 0 8px 32px rgba(120, 126, 255, 0.12);
+}
+
+.glass-card {
+  @apply border border-white/70 bg-white/50 backdrop-blur-lg;
+}
+
+/* Performance optimizations for orbit animations */
+.orbit-a,
+.orbit-b,
+.orbit-c,
+.orbit-d {
+  will-change: transform;
+}
+
+/* Removed CSS-based orbit animations - now using Framer Motion */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .micro-lift {
+    transition: none;
+  }
+  .orbit-a,
+  .orbit-b,
+  .orbit-c,
+  .orbit-d {
+    animation: none;
+  }
+}
+/* Contact section: keep the info links aligned and prevent decorative rails from spilling out. */
+#contact,
+section[id="contact"] {
+  overflow: hidden;
+}
+
+#contact [class*="absolute"][class*="rounded-full"][class*="border"],
+section[id="contact"] [class*="absolute"][class*="rounded-full"][class*="border"] {
+  display: none;
+}
+
+#contact a,
+section[id="contact"] a {
+  position: relative;
+}

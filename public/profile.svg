@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 360" width="360" height="360">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f3e8ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e0e7ff;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="360" height="360" fill="url(#bgGradient)"/>
+  
+  <!-- Head circle -->
+  <circle cx="180" cy="100" r="45" fill="#a78bfa"/>
+  
+  <!-- Body -->
+  <ellipse cx="180" cy="220" rx="50" ry="65" fill="#c7d2fe"/>
+  
+  <!-- Accent shapes for modern look -->
+  <circle cx="100" cy="80" r="15" fill="#ddd6fe" opacity="0.6"/>
+  <circle cx="280" cy="120" r="20" fill="#ddd6fe" opacity="0.4"/>
+  <path d="M 320 250 Q 300 200 340 180" stroke="#c4b5fd" stroke-width="3" fill="none" opacity="0.5"/>
+  
+  <!-- Text -->
+  <text x="180" y="330" font-size="16" font-weight="600" fill="#6366f1" text-anchor="middle">Profile Photo</text>
+</svg>
