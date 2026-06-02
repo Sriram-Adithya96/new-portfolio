@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const nav = [
   { label: "Home", href: "/" },
-  { label: "About", href: "#about" },
+  // { label: "About", href: "#about" },
   { label: "Skills", href: "#skills" },
   { label: "Projects", href: "#projects" },
   { label: "Education", href: "#education" },
@@ -16,7 +16,7 @@ export function SiteHeader() {
         <Link href="/" className="text-base font-bold tracking-wide text-slate-900 transition hover:text-purple-600">
           Sriram Adithya
         </Link>
-        <ul className="flex items-center gap-1 text-sm text-slate-700">
+        <ul className="flex items-center gap-4 text-sm text-slate-700">
           {nav.map((item) => (
             <li key={item.href}>
               <Link 

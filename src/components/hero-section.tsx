@@ -181,7 +181,7 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative w-full overflow-hidden py-16 md:py-24">
+    <section className="relative w-full overflow-hidden pt-10 pb-16 md:pt-14 md:pb-24">
       {/* Premium Background System */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <motion.div
