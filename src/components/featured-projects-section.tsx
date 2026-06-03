@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useRef } from "react";
 
 const projects = [
   {
@@ -21,31 +22,81 @@ const projects = [
       "Modern personal portfolio with 3D interactions, glassmorphism, Framer Motion animations, and responsive design.",
     tech: ["Next.js", "Tailwind CSS", "Framer Motion"],
     demoLink: "#",
-    githubLink: "#",
+    githubLink: "https://github.com/Sriram-Adithya96/new-portfolio",
   },
 ];
 
-// Compact Project Card
+// 3D Tilt Project Card
 function ProjectCard({ project }: { project: (typeof projects)[0] }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Raw mouse position values (normalized -0.5 to 0.5)
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Smooth spring physics
+  const springConfig = { stiffness: 150, damping: 20, mass: 0.5 };
+  const springX = useSpring(mouseX, springConfig);
+  const springY = useSpring(mouseY, springConfig);
+
+  // Map to rotation degrees
+  const rotateX = useTransform(springY, [-0.5, 0.5], [10, -10]);
+  const rotateY = useTransform(springX, [-0.5, 0.5], [-10, 10]);
+
+  // Subtle shine position
+  const shineX = useTransform(springX, [-0.5, 0.5], ["-30%", "130%"]);
+  const shineY = useTransform(springY, [-0.5, 0.5], ["-30%", "130%"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    mouseX.set(x);
+    mouseY.set(y);
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
+
   return (
     <motion.div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: -8, transition: { duration: 0.3 } }}
-      className="group relative overflow-hidden rounded-[24px] border border-white/40 bg-white/80 backdrop-blur-md transition shadow-lg hover:shadow-xl"
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+        perspective: 1000,
+      }}
+      className="group relative overflow-hidden rounded-[24px] border border-white/40 bg-white/80 backdrop-blur-md shadow-lg hover:shadow-2xl transition-shadow duration-300"
     >
       {/* Purple glow on hover */}
+      <div className="absolute -inset-1 -z-10 rounded-[24px] bg-gradient-to-br from-purple-300/30 via-violet-300/20 to-indigo-300/10 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+      {/* Shine overlay that moves with mouse */}
       <motion.div
-        initial={{ opacity: 0 }}
-        whileHover={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
-        className="absolute -inset-1 -z-10 rounded-[24px] bg-gradient-to-br from-purple-300/30 via-violet-300/20 to-indigo-300/10 blur-2xl"
+        className="pointer-events-none absolute inset-0 z-10 rounded-[24px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        style={{
+          background: `radial-gradient(circle at ${shineX} ${shineY}, rgba(255,255,255,0.18) 0%, transparent 60%)`,
+        }}
+      />
+
+      {/* Depth shadow (fake bottom layer for 3D depth) */}
+      <div
+        className="absolute inset-0 rounded-[24px] bg-gradient-to-br from-purple-100/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        style={{ transform: "translateZ(-20px)" }}
       />
 
       {/* Content */}
-      <div className="flex flex-col h-full p-6 md:p-7">
+      <div className="relative flex flex-col h-full p-6 md:p-7" style={{ transform: "translateZ(20px)" }}>
         {/* Icon + Title */}
         <div className="mb-4">
           <div className="text-4xl mb-3">{project.icon}</div>
@@ -114,8 +165,8 @@ export function FeaturedProjectsSection() {
         </h2>
       </motion.div>
 
-      {/* Projects Grid - 2 columns responsive */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+      {/* Projects Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8" style={{ perspective: "1200px" }}>
         {projects.map((project) => (
           <ProjectCard key={project.id} project={project} />
         ))}

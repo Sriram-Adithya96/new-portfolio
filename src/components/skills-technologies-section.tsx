@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useRef } from "react";
 
 const skillCategories = [
   {
@@ -30,46 +31,67 @@ const skillCategories = [
 ];
 
 function SkillCard({ category, index }: { category: typeof skillCategories[0]; index: number }) {
-  const tiltX = useMotionValue(0);
-  const tiltY = useMotionValue(0);
-  const springX = useSpring(tiltX, { stiffness: 170, damping: 18, mass: 0.4 });
-  const springY = useSpring(tiltY, { stiffness: 170, damping: 18, mass: 0.4 });
-  const transform = useTransform(
-    [springX, springY],
-    ([x, y]) => `perspective(1100px) rotateX(${x}deg) rotateY(${y}deg)`,
-  );
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const springConfig = { stiffness: 150, damping: 20, mass: 0.5 };
+  const springX = useSpring(mouseX, springConfig);
+  const springY = useSpring(mouseY, springConfig);
+
+  // Use rotateX and rotateY directly — this is what actually works with Framer Motion
+  const rotateX = useTransform(springY, [-0.5, 0.5], [10, -10]);
+  const rotateY = useTransform(springX, [-0.5, 0.5], [-10, 10]);
+
+  // Shine effect
+  const shineX = useTransform(springX, [-0.5, 0.5], ["0%", "100%"]);
+  const shineY = useTransform(springY, [-0.5, 0.5], ["0%", "100%"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    mouseX.set(x);
+    mouseY.set(y);
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
 
   return (
     <motion.div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: -8, transition: { duration: 0.3 } }}
-      onMouseMove={(event) => {
-        const rect = event.currentTarget.getBoundingClientRect();
-        const px = (event.clientX - rect.left) / rect.width;
-        const py = (event.clientY - rect.top) / rect.height;
-        tiltY.set((px - 0.5) * 4);
-        tiltX.set((0.5 - py) * 4);
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+        transformPerspective: 1000,
       }}
-      onMouseLeave={() => {
-        tiltX.set(0);
-        tiltY.set(0);
-      }}
-      style={{ transform }}
-      className="group relative overflow-hidden rounded-2xl border border-white/40 bg-white/50 backdrop-blur-xl transition shadow-md hover:shadow-lg"
+      className="group relative overflow-hidden rounded-2xl border border-white/40 bg-white/50 backdrop-blur-xl shadow-md hover:shadow-xl transition-shadow duration-300"
     >
-      {/* Hover glow effect */}
+      {/* Hover glow */}
+      <div className="absolute -inset-1 -z-10 rounded-2xl bg-gradient-to-br from-purple-300/30 via-indigo-300/20 to-blue-300/20 blur-2xl opacity-0 group-hover:opacity-60 transition-opacity duration-300" />
+
+      {/* Moving shine overlay */}
       <motion.div
-        initial={{ opacity: 0 }}
-        whileHover={{ opacity: 0.6 }}
-        transition={{ duration: 0.3 }}
-        className="absolute -inset-1 -z-10 rounded-2xl bg-gradient-to-br from-purple-300/30 via-indigo-300/20 to-blue-300/20 blur-2xl"
+        className="pointer-events-none absolute inset-0 z-10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        style={{
+          background: `radial-gradient(circle at ${shineX} ${shineY}, rgba(255,255,255,0.2) 0%, transparent 60%)`,
+        }}
       />
 
-      {/* Content */}
-      <div className="relative p-6 md:p-7">
+      {/* Content lifted in Z */}
+      <div className="relative p-6 md:p-7" style={{ transform: "translateZ(20px)" }}>
         {/* Icon & Title */}
         <div className="mb-6 flex items-start gap-4">
           <div className="text-4xl">{category.icon}</div>
@@ -83,8 +105,7 @@ function SkillCard({ category, index }: { category: typeof skillCategories[0]; i
           {category.technologies.map((tech) => (
             <motion.span
               key={tech}
-              initial={{ opacity: 0.6 }}
-              whileHover={{ opacity: 1, scale: 1.05 }}
+              whileHover={{ scale: 1.05 }}
               className="inline-flex items-center rounded-full border border-indigo-200/60 bg-indigo-50/70 px-3 py-1.5 text-xs font-semibold text-indigo-700 transition backdrop-blur-sm"
             >
               {tech}
@@ -122,8 +143,11 @@ export function SkillsTechnologiesSection() {
         </p>
       </motion.div>
 
-      {/* Skills Grid */}
-      <div className="grid gap-6 md:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mb-12">
+      {/* Skills Grid — perspective must be on the PARENT */}
+      <div
+        className="grid gap-6 md:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mb-12"
+        style={{ perspective: "1200px" }}
+      >
         {skillCategories.map((category, index) => (
           <SkillCard key={category.id} category={category} index={index} />
         ))}
@@ -137,15 +161,12 @@ export function SkillsTechnologiesSection() {
         transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
         className="group relative overflow-hidden rounded-2xl border border-white/40 bg-white/50 backdrop-blur-xl p-8 md:p-10 text-center shadow-md transition"
       >
-        {/* Hover glow */}
         <motion.div
           initial={{ opacity: 0 }}
           whileHover={{ opacity: 0.4 }}
           transition={{ duration: 0.3 }}
           className="absolute -inset-1 -z-10 rounded-2xl bg-gradient-to-r from-cyan-300/30 via-purple-300/30 to-indigo-300/20 blur-2xl"
         />
-
-        {/* Content */}
         <div className="relative">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-indigo-600 mb-3">
             My Current Focus
