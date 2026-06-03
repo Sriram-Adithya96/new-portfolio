@@ -51,7 +51,7 @@ function EducationCard({ card }: { card: (typeof educationCards)[0] }) {
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -8, transition: { duration: 0.3 } }}
-      className="group relative overflow-hidden rounded-[24px] border border-white/40 bg-white/80 backdrop-blur-md transition shadow-lg hover:shadow-xl h-full"
+      className="group relative overflow-hidden rounded-[24px] border border-white/40 bg-white/80 backdrop-blur-md transition shadow-lg hover:shadow-xl h-full min-h-[320px]"
     >
       {/* Purple glow on hover */}
       <motion.div
@@ -140,7 +140,7 @@ export function EducationTimelineSection() {
       </motion.div>
 
       {/* 3-Card Grid */}
-      <div className="grid grid-cols-3 gap-6 md:gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         {educationCards.map((card) => (
           <EducationCard key={card.id} card={card} />
         ))}
