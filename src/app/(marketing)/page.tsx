@@ -7,18 +7,20 @@ import { FeaturedProjectsSection } from "@/components/featured-projects-section"
 import { SkillsTechnologiesSection } from "@/components/skills-technologies-section";
 import { EducationTimelineSection } from "@/components/education-timeline-section";
 import { ContactSection } from "@/components/contact-section";
-
+import { FooterSection } from "@/components/footer-section";
 export default function HomePage() {
   return (
     <PageTransition>
       <main className="relative isolate pb-20">
         <AnimatedBackground />
         <SiteHeader />
-        <SectionReveal><HeroSection /></SectionReveal>
+        
+<div id="home"><SectionReveal><HeroSection /></SectionReveal></div>
 <div id="projects"><SectionReveal><FeaturedProjectsSection /></SectionReveal></div>
 <div id="skills"><SectionReveal><SkillsTechnologiesSection /></SectionReveal></div>
 <div id="education"><SectionReveal><EducationTimelineSection /></SectionReveal></div>
 <div id="contact"><SectionReveal><ContactSection /></SectionReveal></div>
+<SectionReveal><FooterSection /></SectionReveal>
       </main>
     </PageTransition>
   );
